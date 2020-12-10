@@ -61,7 +61,7 @@ const Rating = (props) => {
                 <Icon style={styles.icon} name={stars[3]} size={RFValue(29, 898)} color='#46EBD0' />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => onPress(5)}>
-                <Icon style={styles.icon} name={stars[4]} size={RFValue(29, 898)} color='#46EBD0' />
+                <Icon style={styles.icon, { marginBottom: RFValue(50, 898) }} name={stars[4]} size={RFValue(29, 898)} color='#46EBD0' />
             </TouchableOpacity>
         </View>
     );

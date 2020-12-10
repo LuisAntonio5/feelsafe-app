@@ -28,6 +28,7 @@ const initialState = {
 	filters: {
 		categories: [],
 		rating: 0,
+		openNow: false,
 	}
 }
 
@@ -36,6 +37,8 @@ const reducer = (state = initialState, action) => {
 		case 'UPDATE_CATEGORY':
 			return { ...state, ...action.payload }
 		case 'UPDATE_RATING':
+			return { ...state, ...action.payload }
+		case 'UPDATE_OPENNOW':
 			return { ...state, ...action.payload }
 	}
 	return state

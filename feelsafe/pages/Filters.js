@@ -1,11 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import Icon from 'react-native-vector-icons/AntDesign';
-import IconFA from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet, Text, View, Button, SafeAreaView, TouchableOpacity } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import Category from "../components/Category.js";
 import Rating from "../components/Rating.js";
+import Toggle from '../components/Toggle.js';
 
 function FilterScreen(props) {
 	return (
@@ -21,19 +20,19 @@ function FilterScreen(props) {
 				</View>
 				<View style={styles.subcontainer, { marginRight: RFValue(170, 898) }}>
 					<Text style={styles.subtitle}>Avaliação</Text>
-
 					<Rating />
-
 				</View>
 				<View style={styles.subcontainer}>
 					<View style={styles.distancia}>
 						<Text style={styles.subtitle}>Distância</Text>
 					</View>
 				</View>
-				<View style={styles.subcontainer}>
-					<View style={styles.subcontainerRowApart}>
+				<View style={styles.subcontainerRowApart}>
+					<View style={styles.viewTitle}>
 						<Text style={styles.subtitle}>Aberto agora</Text>
-						<IconFA style={styles.iconFlexEnd} name='toggle-on' size={RFValue(29, 898)} color='#46EBD0' />
+					</View>
+					<View style={styles.viewToggle}>
+						<Toggle />
 					</View>
 				</View>
 				<StatusBar style="auto" />
@@ -96,18 +95,21 @@ const styles = StyleSheet.create({
 	},
 	subcontainerRowApart: {
 		flexDirection: 'row',
-		paddingRight: RFValue(25, 898),
-		justifyContent: 'space-between'
+		justifyContent: 'flex-start',
+	},
+	viewTitle: {
+		alignSelf: "flex-start",
+	},
+	viewToggle: {
+		alignSelf: "flex-end",
+		marginLeft: RFValue(150, 898),
 	},
 	buttons: {
 		backgroundColor: '#46EBD0',
-		alignItems: 'center',
+		alignItems: 'flex-start',
 	},
 	distancia: {
 		paddingRight: RFValue(110, 898),
-	},
-	iconFlexEnd: {
-		marginLeft: RFValue(20, 898),
 	},
 
 });
