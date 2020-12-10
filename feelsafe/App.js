@@ -21,6 +21,8 @@ import {
 
 import HomeScreen from "./pages/Home.js";
 import FilterScreen from "./pages/Filters.js";
+import Onboarding from "./pages/Onboarding.js";
+import Login from "./pages/Login.js";
 
 const Stack = createStackNavigator();
 
@@ -67,11 +69,16 @@ export default function App() {
 			<Provider store={store}>
 				<NavigationContainer>
 					<Stack.Navigator
-						initialRouteName="Home"
+						initialRouteName="Onboarding"
 						screenOptions={screenOptions}
 					>
+						<Stack.Screen name="Login" component={Login} />
 						<Stack.Screen name="Home" component={HomeScreen} />
 						<Stack.Screen name="Filters" component={FilterScreen} />
+						<Stack.Screen
+							name="Onboarding"
+							component={Onboarding}
+						/>
 					</Stack.Navigator>
 				</NavigationContainer>
 			</Provider>
