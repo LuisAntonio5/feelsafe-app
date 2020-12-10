@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
-        paddingTop: RFValue(15, 898),
+        paddingTop: RFValue(5, 898),
     },
     icon: {
         marginRight: RFValue(15, 898),

@@ -5,11 +5,14 @@ import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import Category from "../components/Category.js";
 import Rating from "../components/Rating.js";
 import Toggle from '../components/Toggle.js';
+import colors from '../helpers/Colors';
 
 function FilterScreen(props) {
 	return (
 		// <SafeAreaView style={{ flex: 1}} >
-		<View style={{ flex: 1, height: '100%', width: '100%', padding: 0, margin: 0 }}>
+		<View style={{
+			flex: 1, height: '100%', width: '100%', padding: 0, margin: 0, backgroundColor: '#fff'
+		}}>
 			<View style={styles.container}>
 				<Text style={styles.title}>Filtrar</Text>
 				<View style={styles.subcontainer}>
@@ -37,19 +40,17 @@ function FilterScreen(props) {
 				</View>
 				<StatusBar style="auto" />
 			</View>
-			<View style={styles.buttons}>
-				<Button
-					title="Cancelar"
-					color="#fff"
-					accessibilityLabel="Learn more about this purple button"
-				/>
-			</View>
-			<View style={styles.buttons}>
-				<Button
-					title="Aplicar"
-					color="#fff"
-					accessibilityLabel="Learn more about this purple button"
-				/>
+			<View style={styles.subcontainerRowApart}>
+				<View style={styles.CancelButton}>
+					<TouchableOpacity>
+						<Text style={styles.CancelButtonText}>Cancelar</Text>
+					</TouchableOpacity >
+				</View>
+				<View style={styles.ApplyButton}>
+					<TouchableOpacity>
+						<Text style={styles.ApplyButtonText}>Aplicar</Text>
+					</TouchableOpacity >
+				</View>
 			</View>
 		</View >
 		// </SafeAreaView>
@@ -95,7 +96,8 @@ const styles = StyleSheet.create({
 	},
 	subcontainerRowApart: {
 		flexDirection: 'row',
-		justifyContent: 'flex-start',
+		justifyContent: 'space-evenly',
+		backgroundColor: '#fff',
 	},
 	viewTitle: {
 		alignSelf: "flex-start",
@@ -104,9 +106,38 @@ const styles = StyleSheet.create({
 		alignSelf: "flex-end",
 		marginLeft: RFValue(150, 898),
 	},
-	buttons: {
-		backgroundColor: '#46EBD0',
-		alignItems: 'flex-start',
+	ApplyButton: {
+		backgroundColor: colors.lightGreen,
+		alignItems: 'center',
+		borderRadius: RFValue(50, 898),
+		width: RFValue(150, 898),
+		height: RFValue(40, 898),
+		marginTop: RFValue(120, 898),
+	},
+	ApplyButtonText: {
+		fontWeight: '900',
+		fontFamily: 'Raleway_700Bold',
+		fontStyle: 'normal',
+		color: 'white',
+		fontSize: RFValue(20, 898),
+		marginTop: RFValue(7, 898),
+	},
+	CancelButton: {
+		backgroundColor: colors.grey,
+		alignItems: 'center',
+		textAlign: 'center',
+		borderRadius: RFValue(50, 898),
+		width: RFValue(150, 898),
+		height: RFValue(40, 898),
+		marginTop: RFValue(120, 898),
+	},
+	CancelButtonText: {
+		fontWeight: '900',
+		fontFamily: 'Raleway_700Bold',
+		fontStyle: 'normal',
+		fontSize: RFValue(20, 898),
+		color: colors.darkGrey,
+		marginTop: RFValue(7, 898),
 	},
 	distancia: {
 		paddingRight: RFValue(110, 898),
