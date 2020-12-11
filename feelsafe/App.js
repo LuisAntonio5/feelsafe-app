@@ -25,6 +25,7 @@ import Onboarding from "./pages/Onboarding.js";
 import Login from "./pages/Login.js";
 import SettingsScreen from "./pages/Settings.js";
 import ChangePasswordScreen from "./pages/ChangePassword.js";
+import PlaceScreen from "./pages/Place.js";
 
 const Stack = createStackNavigator();
 
@@ -83,6 +84,7 @@ export default function App() {
 						/>
 						<Stack.Screen name="Settings" component={SettingsScreen} />
 						<Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+						<Stack.Screen name="Place" component={PlaceScreen} />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</Provider>

@@ -24,7 +24,6 @@ const Category = (props) => {
     }
     return (
         <TouchableOpacity onPress={checked ? onPressRemove : onPressAdd}>
-            <Text> {props.counter} </Text>
             <View style={styles.namePlusIcon}>
                 <Icon style={styles.icon} name={checked ? "checkcircle" : "checkcircleo"} size={RFValue(29, 898)} color={checked ? colors.lightGreen : colors.grey} />
                 <Text style={{

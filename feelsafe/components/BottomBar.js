@@ -45,6 +45,9 @@ export default function BottomBar(props) {
     const onPressFilters = () => {
         props.navigation.navigate("Filters");
     };
+    const onPressPlace = () => {
+        props.navigation.navigate("Place");
+    };
     return (
         <View
             style={{
@@ -67,10 +70,12 @@ export default function BottomBar(props) {
                 />
             </View>
             <View style={styles.mainButton}>
-                <LocationButton
-                    height={RFValue(110, 898)}
-                    width={RFValue(110, 898)}
-                />
+                <TouchableOpacity onPress={onPressPlace} style={styles.button}>
+                    <LocationButton
+                        height={RFValue(110, 898)}
+                        width={RFValue(110, 898)}
+                    />
+                </TouchableOpacity>
             </View>
         </View>
     );
