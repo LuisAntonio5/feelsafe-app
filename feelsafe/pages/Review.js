@@ -6,39 +6,79 @@ import {
     Image,
 } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import MainButton from "../components/MainButton.js";
+import ReviewInput from "../components/ReviewInput.js";
 import Rating from "../components/Rating.js";
 import colors from "../helpers/Colors";
+import { ScrollView } from "react-native-gesture-handler";
 
-function PlaceScreen(props) {
+const regex = {
+    review: /^[^±@^_§¡¢§¶•ªº«\\]{1,20}$/,
+};
+
+function ReviewScreen(props) {
     const placeState = {
         name: "O Moelas",
         type: "Café/Bar"
     };
 
-    const onPressReview = () => {
-        props.navigation.navigate("Review");
+    const [buttonDisabled, setButtonDisabled] = useState(true);
+    const [formValues, setFormValues] = useState({
+        writtenReview: "",
+    });
+    const [errors, setErrors] = useState({
+        writtenReview: null,
+    });
+
+    const handleKeyboardDismiss = () => {
+        Keyboard.dismiss();
+    };
+
+    const checkDisabled = () => {
+        var keys = Object.keys(errors);
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            if (errors[key]) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    const validateForm = (field) => { };
+
+
+    const onPressHome = () => {
+        props.navigation.navigate("Home");
+    };
+
+    const handleChangeText = (text, fieldName) => {
+        setFormValues((prev) => ({ ...prev, [fieldName]: text }));
+        if (!text.match(regex[fieldName])) {
+            setErrors((prev) => ({ ...prev, [fieldName]: "Invalid Field" }));
+            setButtonDisabled(true);
+        } else {
+            setErrors((prev) => ({ ...prev, [fieldName]: null }));
+            setButtonDisabled(checkDisabled());
+        }
     };
 
     return (
         <View style={styles.mainView}>
             <View style={styles.header}>
-                <View>
-                    <Image style={styles.image} source={require('../assets/moelas.png')} />
-                </View>
-                <View>
-                    <Text style={styles.title}>{placeState.name}</Text>
-                </View>
-                <View>
-                    <Text style={styles.subtitle}>{placeState.type}</Text>
+                <View style={styles.subcontainerRow}>
+                    <View>
+                        <Image style={styles.image} source={require('../assets/moelas.png')} />
+                    </View>
+                    <View style={styles.subcontainer}>
+                        <View>
+                            <Text style={styles.title}>{placeState.name}</Text>
+                        </View>
+                        <View>
+                            <Text style={styles.subtitle}>{placeState.type}</Text>
+                        </View>
+                    </View>
                 </View>
             </View>
-            <MainButton
-                backgroundGreen={true}
-                text="Avaliar"
-                onPress={onPressReview}
-                buttonStyle={styles.button}
-            />
             <View style={styles.container}>
                 <View style={(styles.subcontainerRow)}>
                     <Text style={styles.subtitleRow}>Condições sanitárias</Text>
@@ -53,6 +93,16 @@ function PlaceScreen(props) {
                     <Rating />
                 </View>
             </View>
+            <View style={(styles.form)}>
+                <ReviewInput
+                    labelText="Review"
+                    fieldName="writtenReview"
+                    placeholder="Descreve a tua experiência (opcional)"
+                    onChangeText={handleChangeText}
+                    errors={errors}
+                    validateForm={validateForm}
+                />
+            </View>
         </View>
     );
 }
@@ -62,10 +112,18 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        marginTop: RFValue(70, 898),
+        marginTop: RFValue(30, 898),
+    },
+    form: {
+        marginTop: RFValue(20, 898),
+        width: "100%",
     },
     subcontainerRow: {
         flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    subcontainer: {
+        flexDirection: "column",
         justifyContent: "space-between",
     },
     buttonRow: {
@@ -118,7 +176,7 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        alignItems: "center",
+        alignItems: "flex-start",
     },
 
     button: {
@@ -127,9 +185,11 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        width: RFValue(120, 898),
-        height: RFValue(120, 898),
+        width: RFValue(100, 898),
+        height: RFValue(100, 898),
+        marginRight: RFValue(50, 898),
+        marginTop: RFValue(25, 898),
     },
 });
 
-export default PlaceScreen;
+export default ReviewScreen;

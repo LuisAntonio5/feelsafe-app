@@ -100,7 +100,7 @@ function SettingsScreen(props) {
                 <CustomInput
                     labelText="Email"
                     fieldName="email"
-                    autoCompleteType="name"
+                    autoCompleteType="email"
                     onChangeText={handleChangeText}
                     errors={errors}
                     validateForm={validateForm}
