@@ -44,7 +44,7 @@ function FilterScreen(props) {
 				<View
 					style={
 						(styles.subcontainer,
-						{ marginRight: RFValue(170, 898) })
+							{ marginRight: RFValue(170, 898) })
 					}
 				>
 					<Text style={styles.subtitle}>Avaliação</Text>
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 		display: "flex",
 		alignItems: "center",
 		color: "#46EBD0",
-		fontFamily: "Lato_400Regular",
+		fontFamily: "Lato_900Black",
 		fontStyle: "normal",
 
 		marginBottom: RFValue(40, 898),

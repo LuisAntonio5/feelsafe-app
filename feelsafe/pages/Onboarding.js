@@ -23,7 +23,7 @@ function Onboarding(props) {
 	};
 
 	const onPressSignup = () => {
-		props.navigation.navigate("Singup");
+		props.navigation.navigate("Signup");
 	};
 
 	const onPressSkip = () => {

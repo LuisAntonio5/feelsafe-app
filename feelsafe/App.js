@@ -23,6 +23,8 @@ import HomeScreen from "./pages/Home.js";
 import FilterScreen from "./pages/Filters.js";
 import Onboarding from "./pages/Onboarding.js";
 import Login from "./pages/Login.js";
+import SettingsScreen from "./pages/Settings.js";
+import ChangePasswordScreen from "./pages/ChangePassword.js";
 
 const Stack = createStackNavigator();
 
@@ -79,6 +81,8 @@ export default function App() {
 							name="Onboarding"
 							component={Onboarding}
 						/>
+						<Stack.Screen name="Settings" component={SettingsScreen} />
+						<Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</Provider>

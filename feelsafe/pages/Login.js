@@ -60,13 +60,13 @@ function Login(props) {
 		return false;
 	};
 
-	const validateForm = (field) => {};
+	const validateForm = (field) => { };
 
 	const onPressSignup = () => {
 		props.navigation.navigate("Signup");
 	};
 
-	const onPressLogin = () => {};
+	const onPressLogin = () => { };
 
 	return (
 		<View style={styles.mainView}>

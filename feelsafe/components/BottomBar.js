@@ -40,7 +40,7 @@ const BottomBarButton = (props) => {
 
 export default function BottomBar(props) {
     const onPressSettings = () => {
-        props.navigation.navigate("Filters");
+        props.navigation.navigate("Settings");
     };
     const onPressFilters = () => {
         props.navigation.navigate("Filters");
