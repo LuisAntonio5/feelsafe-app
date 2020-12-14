@@ -4,12 +4,13 @@ import {
     Text,
     View,
     Image,
+    TouchableOpacity,
+    ScrollView,
 } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import ReviewInput from "../components/ReviewInput.js";
 import Rating from "../components/Rating.js";
 import colors from "../helpers/Colors";
-import { ScrollView } from "react-native-gesture-handler";
 
 const regex = {
     review: /^[^±@^_§¡¢§¶•ªº«\\]{1,20}$/,
@@ -102,12 +103,63 @@ function ReviewScreen(props) {
                     errors={errors}
                     validateForm={validateForm}
                 />
+                <View style={styles.subcontainerRowApart}>
+                    <TouchableOpacity
+                        style={styles.CancelButton}
+                    >
+                        <Text style={styles.CancelButtonText}>Cancelar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.ApplyButton}
+                    >
+                        <Text style={styles.ApplyButtonText}>Aplicar</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
+
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    subcontainerRowApart: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        backgroundColor: "#fff",
+        padding: 0,
+    },
+    ApplyButton: {
+        backgroundColor: colors.lightGreen,
+        alignItems: "center",
+        alignItems: "center",
+        borderRadius: RFValue(50, 898),
+        width: RFValue(150, 898),
+        paddingVertical: RFValue(15, 898),
+        marginTop: RFValue(50, 898),
+    },
+    ApplyButtonText: {
+        fontWeight: "900",
+        fontFamily: "Raleway_700Bold",
+        fontStyle: "normal",
+        color: "white",
+        fontSize: RFValue(20, 898),
+    },
+    CancelButton: {
+        backgroundColor: colors.grey,
+        alignItems: "center",
+        textAlign: "center",
+        borderRadius: RFValue(50, 898),
+        width: RFValue(150, 898),
+        paddingVertical: RFValue(15, 898),
+        marginTop: RFValue(50, 898),
+    },
+    CancelButtonText: {
+        fontWeight: "900",
+        fontFamily: "Raleway_700Bold",
+        fontStyle: "normal",
+        fontSize: RFValue(20, 898),
+        color: colors.darkGrey,
+    },
     container: {
         flexDirection: "column",
         alignItems: "center",
@@ -117,6 +169,7 @@ const styles = StyleSheet.create({
     form: {
         marginTop: RFValue(20, 898),
         width: "100%",
+        backgroundColor: "#fff",
     },
     subcontainerRow: {
         flexDirection: "row",

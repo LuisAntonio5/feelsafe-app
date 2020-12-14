@@ -8,7 +8,7 @@ const ReviewInput = (props) => {
     const red = "#cd5e41";
 
     if (props.errors) {
-        var borderColor = props.errors[props.fieldName] ? red : colors.secGreen;
+        var borderColor = props.errors[props.fieldName] ? red : "#D3D0D0";
         var color = props.errors[props.fieldName] ? red : colors.secGreen;
     } else {
         var borderColor = "#D3D0D0";
@@ -17,14 +17,9 @@ const ReviewInput = (props) => {
 
     return (
         <View style={{ width: "100%" }}>
-            {props.labelText && (
-                <Text style={{ ...styles.textLabel, color }}>
-                    {props.labelText}
-                </Text>
-            )}
             <TextInput
                 style={{ ...styles.textInput, borderColor }}
-                textAlign="left"
+                textAlign="center"
                 secureTextEntry={props.secure}
                 placeholder={props.placeholder}
                 placeholderTextColor={colors.grey}
@@ -43,10 +38,6 @@ const ReviewInput = (props) => {
 };
 
 const styles = StyleSheet.create({
-    textLabel: {
-        fontFamily: "Lato_400Regular",
-        fontSize: RFValue(16, 812),
-    },
 
     textInput: {
         alignSelf: "center",
@@ -54,18 +45,18 @@ const styles = StyleSheet.create({
         color: colors.grey,
         fontFamily: "Lato_400Regular",
         borderWidth: 1,
-        paddingVertical: RFValue(80, 898),
-        paddingLeft: RFValue(10, 898),
-        paddingRight: RFValue(100, 898),
+        width: "100%",
+        height: RFValue(180, 898),
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 1,
+            height: 7,
         },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
+        shadowOpacity: 0.41,
+        shadowRadius: 9.11,
 
-        elevation: 3,
+        elevation: 14,
+        borderRadius: 10,
     },
 
     errorText: {
@@ -73,7 +64,6 @@ const styles = StyleSheet.create({
         fontFamily: "Lato_900Black",
         color: "#cd5e41",
         paddingLeft: RFValue(30, 898),
-        marginBottom: RFValue(10, 898),
     },
 });
 
