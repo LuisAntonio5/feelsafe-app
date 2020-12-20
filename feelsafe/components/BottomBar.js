@@ -20,8 +20,8 @@ const BottomBarButton = (props) => {
             alignItems: "center",
         },
         text: {
-            fontFamily: "Raleway_400Regular",
-            fontSize: RFValue(14, 898),
+            fontFamily: "Raleway_700Bold",
+            fontSize: RFValue(15, 898),
             color: colors.grey,
             marginTop: RFValue(2, 898),
         },
@@ -40,7 +40,7 @@ const BottomBarButton = (props) => {
 
 export default function BottomBar(props) {
     const onPressSettings = () => {
-        props.navigation.navigate("Filters");
+        props.navigation.navigate("Settings");
     };
     const onPressFilters = () => {
         props.navigation.navigate("Filters");
@@ -49,7 +49,7 @@ export default function BottomBar(props) {
         <View
             style={{
                 position: "absolute",
-                bottom: RFValue(90, 989),
+                bottom: RFValue(50, 989),
                 width: "100%",
                 alignItems: "center",
             }}
@@ -66,12 +66,21 @@ export default function BottomBar(props) {
                     onPress={onPressFilters}
                 />
             </View>
-            <View style={styles.mainButton}>
+            <TouchableOpacity
+                onPress={props.onPressLocation}
+                style={styles.mainButton}
+            >
                 <LocationButton
                     height={RFValue(110, 898)}
                     width={RFValue(110, 898)}
                 />
-            </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={props.onPressSearch}
+                style={styles.searchHere}
+            >
+                <Text style={styles.searchHereText}>Procurar Aqui</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -109,5 +118,30 @@ const styles = StyleSheet.create({
         shadowRadius: 2.62,
 
         elevation: 4,
+    },
+    searchHere: {
+        backgroundColor: colors.secGreen,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingVertical: RFValue(14, 898),
+        paddingHorizontal: RFValue(20, 898),
+        borderRadius: RFValue(20, 898),
+
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+
+        elevation: 5,
+
+        marginTop: RFValue(110, 989) / 6,
+    },
+
+    searchHereText: {
+        fontFamily: "Lato_900Black",
+        color: "white",
     },
 });

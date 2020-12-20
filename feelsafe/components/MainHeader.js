@@ -25,7 +25,7 @@ export default function MainHeader(props) {
             }}
         >
             <FeelSafeLettering width={140} height={30} />
-            <TouchableOpacity style={styles.searchBar}>
+            <TouchableOpacity onPress={props.onPress} style={styles.searchBar}>
                 <Text style={styles.searchText}>e.g. moelas</Text>
                 <Icon
                     name="search1"

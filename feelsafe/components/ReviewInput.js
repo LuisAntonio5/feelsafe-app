@@ -4,14 +4,14 @@ import { RFValue } from "react-native-responsive-fontsize";
 
 import colors from "../helpers/Colors";
 
-const CustomInput = (props) => {
+const ReviewInput = (props) => {
     const red = "#cd5e41";
 
     if (props.errors) {
-        var borderColor = props.errors[props.fieldName] ? red : colors.secGreen;
+        var borderColor = props.errors[props.fieldName] ? red : "#D3D0D0";
         var color = props.errors[props.fieldName] ? red : colors.secGreen;
     } else {
-        var borderColor = "#edc2a0";
+        var borderColor = "#D3D0D0";
         var color = colors.secGreen;
     }
 
@@ -24,7 +24,7 @@ const CustomInput = (props) => {
             )}
             <TextInput
                 style={{ ...styles.textInput, borderColor }}
-                textAlign="left"
+                textAlign="center"
                 secureTextEntry={props.secure}
                 placeholder={props.placeholder}
                 placeholderTextColor={colors.grey}
@@ -46,18 +46,17 @@ const styles = StyleSheet.create({
     textLabel: {
         fontFamily: "Lato_400Regular",
         fontSize: RFValue(16, 812),
-        paddingLeft: RFValue(30, 898),
-        marginBottom: RFValue(6, 898),
     },
 
     textInput: {
+        alignSelf: "center",
         fontSize: RFValue(14, 812),
         color: colors.grey,
         fontFamily: "Lato_400Regular",
         borderWidth: 1,
-        paddingVertical: RFValue(6, 898),
-        paddingHorizontal: RFValue(30, 898),
-        borderRadius: RFValue(200, 898),
+        width: "100%",
+        height: RFValue(180, 898),
+        borderRadius: 10,
     },
 
     errorText: {
@@ -65,8 +64,8 @@ const styles = StyleSheet.create({
         fontFamily: "Lato_900Black",
         color: "#cd5e41",
         paddingLeft: RFValue(30, 898),
-        marginBottom: RFValue(6, 898),
+        marginBottom: RFValue(10, 898),
     },
 });
 
-export default CustomInput;
+export default ReviewInput;

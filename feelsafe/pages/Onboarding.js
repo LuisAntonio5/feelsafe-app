@@ -23,7 +23,7 @@ function Onboarding(props) {
 	};
 
 	const onPressSignup = () => {
-		props.navigation.navigate("Singup");
+		props.navigation.navigate("Signup");
 	};
 
 	const onPressSkip = () => {
@@ -53,7 +53,7 @@ function Onboarding(props) {
 					<MainButton
 						backgroundGreen={true}
 						text="Signup"
-						onPress={onPressLogin}
+						onPress={onPressSignup}
 						textStyle={{ fontSize: RFValue(20, 898) }}
 					/>
 				</View>
@@ -62,7 +62,7 @@ function Onboarding(props) {
 					onPress={onPressSkip}
 				>
 					<Text style={styles.guestText}>
-						Continuar como convidado
+						Continuar como Convidado
 					</Text>
 					<Icon
 						color={colors.grey}

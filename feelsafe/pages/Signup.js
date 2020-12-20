@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { CommonActions } from "@react-navigation/native";
 import {
 	StyleSheet,
 	Text,
@@ -28,17 +29,25 @@ const regex = {
 	email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 
 	password: /^(?=.*\d)(?=.*[a-zA-Z]).{6,}$/,
+	firstName: /.*/,
+	lastName: /.*/,
 };
 
-function Login(props) {
+function Signup(props) {
 	const [buttonDisabled, setButtonDisabled] = useState(true);
 	const [formValues, setFormValues] = useState({
 		email: "",
 		password: "",
+		lastName: "",
+		firstName: "",
+		confirmPassword: "",
 	});
 	const [errors, setErrors] = useState({
 		email: null,
 		password: null,
+		lastName: null,
+		firstName: null,
+		confirmPassword: null,
 	});
 	const authState = useSelector((store) => store.auth);
 	const [loading, setLoading] = useState(false);
@@ -69,22 +78,23 @@ function Login(props) {
 		return false;
 	};
 
-	const validateForm = (field) => {};
+	const onPressSignup = async () => {
+		if (formValues["password"] != formValues["confirmPassword"]) {
+			Alert.alert(
+				"Passwords Must Match",
+				"Please confirm your password.",
+				[{ text: "Ok" }]
+			);
+			return;
+		}
 
-	const onPressSignup = () => {
-		props.navigation.navigate("Signup");
+		setLoading(true);
+		await props.signUp(formValues);
+		setLoading(false);
 	};
 
-	const onPress = async () => {
-		setLoading(true);
-		await props.signIn(formValues);
-		//Alert.alert(
-		//"Error",
-		//"Não foi possível concluir o registo. Por favor, tente outra vez.",
-		//[{ text: "Ok" }]
-		//);
-
-		setLoading(false);
+	const onPressBack = () => {
+		props.navigation.goBack();
 	};
 
 	useEffect(() => {
@@ -92,6 +102,14 @@ function Login(props) {
 		if (authState.isAuthenticated) {
 			ResetAndNavigate(props.navigation, "Home");
 		} else {
+			//Alert.alert(
+			//"Error",
+			//"Por favor tente novamente.",
+			//[{ text: "Ok" }],
+			//{
+			//cancelable: false,
+			//}
+			//);
 		}
 	}, [authState.isAuthenticated]);
 
@@ -113,38 +131,56 @@ function Login(props) {
 				</View>
 				<View style={styles.form}>
 					<CustomInput
+						labelText="Primeiro Nome"
+						fieldName="firstName"
+						autoCompleteType="name"
+						onChangeText={handleChangeText}
+						errors={errors}
+					/>
+					<CustomInput
+						labelText="Último Nome"
+						fieldName="lastName"
+						autoCompleteType="name"
+						onChangeText={handleChangeText}
+						errors={errors}
+					/>
+					<CustomInput
 						labelText="Email"
 						fieldName="email"
 						autoCompleteType="name"
 						onChangeText={handleChangeText}
-						errors={{}}
-						validateForm={validateForm}
+						errors={errors}
 					/>
 					<CustomInput
 						labelText="Password"
 						fieldName="password"
 						secure={true}
 						onChangeText={handleChangeText}
-						errors={{}}
-						validateForm={validateForm}
+						errors={errors}
+					/>
+					<CustomInput
+						labelText="Confirm Password"
+						fieldName="confirmPassword"
+						secure={true}
+						onChangeText={handleChangeText}
+						errors={errors}
 					/>
 				</View>
-				<MainButton
-					backgroundGreen={true}
-					text="Login"
-					onPress={onPress}
-					buttonStyle={styles.button}
-					disabled={buttonDisabled}
-				/>
-				<View style={styles.signupView}>
-					<Text style={styles.signupSimpleText}>
-						Ainda não tens conta?
-					</Text>
-					<TouchableOpacity onPress={onPressSignup}>
-						<Text style={styles.signupBoldText}>
-							Regista-te Aqui
-						</Text>
-					</TouchableOpacity>
+				<View style={styles.buttonView}>
+					<MainButton
+						backgroundGreen={false}
+						text="Voltar"
+						onPress={onPressBack}
+						buttonStyle={styles.button}
+					/>
+
+					<MainButton
+						backgroundGreen={true}
+						text="Registar"
+						onPress={onPressSignup}
+						buttonStyle={styles.button}
+						disabled={buttonDisabled}
+					/>
 				</View>
 			</View>
 		</TouchableWithoutFeedback>
@@ -157,15 +193,28 @@ const styles = StyleSheet.create({
 		width: "100%",
 		backgroundColor: "white",
 		alignItems: "center",
-		paddingVertical: RFValue(80, 812),
+		paddingVertical: RFValue(60, 812),
 		paddingHorizontal: "10%",
 	},
 
 	header: {
 		alignItems: "center",
 	},
+
+	skipbutton: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+
+	guestText: {
+		fontFamily: "Raleway_700Bold",
+		fontSize: RFValue(16, 898),
+		color: colors.secGreen,
+		marginRight: RFValue(16, 898),
+	},
+
 	form: {
-		marginTop: RFValue(20, 898),
+		marginTop: RFValue(12, 898),
 		width: "85%",
 	},
 
@@ -174,23 +223,12 @@ const styles = StyleSheet.create({
 		width: "45%",
 	},
 
-	signupView: {
+	buttonView: {
+		width: "100%",
+		paddingHorizontal: "10%",
 		flexDirection: "row",
-		marginTop: RFValue(100, 898),
-	},
-
-	signupSimpleText: {
-		fontSize: RFValue(16, 898),
-		fontFamily: "Lato_400Regular",
-		color: colors.grey,
-		marginRight: RFValue(10, 898),
-	},
-
-	signupBoldText: {
-		fontSize: RFValue(16, 898),
-		fontFamily: "Lato_900Black",
-		color: "black",
+		justifyContent: "space-between",
 	},
 });
 
-export default connect(() => ({}), actions)(Login);
+export default connect(() => ({}), actions)(Signup);
