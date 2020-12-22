@@ -22,8 +22,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "feelsafe.com",
-      "versionCode": 2,
+      "package": "feelsafe_app.com",
+      "versionCode": 1,
       "permissions": ["ACCESS_FINE_LOCATION"],
       "config": {
         "googleMaps": {

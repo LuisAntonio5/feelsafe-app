@@ -13,6 +13,9 @@ import Icon from "react-native-vector-icons/Feather";
 import LocationButton from "../assets/location-button";
 
 import colors from "../helpers/Colors.js";
+import { connect } from "react-redux";
+import * as actions from "../actions";
+import ResetAndNavigate from "../helpers/resetAndNavigate.js";
 
 const BottomBarButton = (props) => {
     const styles = StyleSheet.create({
@@ -38,12 +41,15 @@ const BottomBarButton = (props) => {
     );
 };
 
-export default function BottomBar(props) {
+function BottomBar(props) {
     const onPressSettings = () => {
         props.navigation.navigate("Settings");
     };
     const onPressFilters = () => {
         props.navigation.navigate("Filters");
+    };
+    const onPressSignin = () => {
+        ResetAndNavigate(props.navigation, "Onboarding");
     };
     return (
         <View
@@ -55,11 +61,20 @@ export default function BottomBar(props) {
             }}
         >
             <View style={styles.whiteBar}>
-                <BottomBarButton
-                    text="Definições"
-                    icon="settings"
-                    onPress={onPressSettings}
-                />
+                {!props.isAuth && (
+                    <BottomBarButton
+                        text="Sign In"
+                        icon="user"
+                        onPress={onPressSignin}
+                    />
+                )}
+                {props.isAuth && (
+                    <BottomBarButton
+                        text="Definições"
+                        icon="settings"
+                        onPress={onPressSettings}
+                    />
+                )}
                 <BottomBarButton
                     text="Filtros"
                     icon="filter"
@@ -145,3 +160,11 @@ const styles = StyleSheet.create({
         color: "white",
     },
 });
+
+function mapStateToProps(state) {
+    return {
+        isAuth: state.auth.isAuthenticated,
+    };
+}
+
+export default connect(mapStateToProps, actions)(BottomBar);

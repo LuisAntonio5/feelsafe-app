@@ -1,16 +1,16 @@
 import { StatusBar } from "expo-status-bar";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import IconFA from "react-native-vector-icons/FontAwesome";
 import {
-	ScrollView,
+	TouchableWithoutFeedback,
 	StyleSheet,
 	Text,
 	View,
 	Button,
 	SafeAreaView,
-	TouchableWithoutFeedback,
+	ScrollView,
 } from "react-native";
 import * as Location from "expo-location";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
@@ -26,95 +26,86 @@ import {
 	Raleway_400Regular,
 	Raleway_700Bold,
 } from "@expo-google-fonts/raleway";
-import { useSelector } from "react-redux";
 
 import MainHeader from "../components/MainHeader";
-import SliderCard from "../components/SliderCard";
 import BottomBar from "../components/BottomBar.js";
+import { connect } from "react-redux";
+import * as actions from "../actions";
+import SliderCard from "../components/SliderCard.js";
 
-import jsonPlaces from "../places.json";
-
-const defaultCenter = {
-	latitude: 40.2115,
-	longitude: -8.4292,
-	latitudeDelta: 0.1,
-	longitudeDelta: 0.06,
-};
+import API from "../helpers/API.js";
+import axios from "axios";
+import typeTranslator from "../helpers/typeTranslator.js";
 
 const SliderCardContainer = ({ navigation, places }) => {
 	return places.map((item) => {
+		console.log(item.photos ? item.photos[0].photo_reference : null);
 		return (
 			<SliderCard
 				name={item.name}
-				type={item.types[0] + "-" + item.types[1]}
-				numStars={3}
-				nReviews={10}
+				type={typeTranslator[item.types[0]]}
+				numStars={item.ratingFeelsafe ?? 0}
+				nReviews={item.nReviews ?? 0}
 				key={item.place_id}
 				place={item}
 				navigation={navigation}
+				photoReference={
+					item.photos ? item.photos[0].photo_reference : null
+				}
 			/>
 		);
 	});
 };
 
-export default function HomeScreen(props) {
+function HomeScreen(props) {
 	const { navigation } = props;
-	const [region, setRegion] = useState({
-		latitude: 40.2115,
-		longitude: -8.4292,
-		latitudeDelta: 0.1,
-		longitudeDelta: 0.06,
-	});
-	const [mapRegion, setMapRegion] = useState({
-		latitude: 40.2115,
-		longitude: -8.4292,
-		latitudeDelta: 0.1,
-		longitudeDelta: 0.06,
-	});
-	const [currentLocation, setCurrentLocation] = useState(null);
-	const [places, setPlaces] = useState(jsonPlaces.results);
+	const ref = useRef(null);
 	const [bottomBarIsActive, setBottomBarIsActive] = useState(true);
-	const locationState = useSelector((store) => store.location);
-
+	const [places, setPlaces] = useState([]);
 	useEffect(() => {
 		(async () => {
 			let { status } = await Location.requestPermissionsAsync();
 			if (status !== "granted") {
 				return;
 			}
-			if (props.location) {
-				setRegion({
-					latitude: props.location.lat,
-					longitude: props.location.lng,
-					latitudeDelta: 0.1,
-					longitudeDelta: 0.06,
-				});
-				return;
-			}
+
 			let location = await Location.getCurrentPositionAsync({});
-			setCurrentLocation(location);
 			if (location) {
 				const newRegion = {
-					latitude: location.coords.latitude,
-					longitude: location.coords.longitude,
+					lat: location.coords.latitude,
+					lng: location.coords.longitude,
 					latitudeDelta: 0.1,
 					longitudeDelta: 0.06,
 				};
-				setRegion(newRegion);
+				props.updateLocation(newRegion);
 			}
 		})();
 	}, []);
+
+	useEffect(() => {
+		ref.current.animateToRegion(props.location, 500);
+	}, [props.location]);
 
 	const onRegionChange = (region) => {
 		setBottomBarIsActive(true);
 	};
 
-	const onPressSearchHere = () => {
-		setBottomBarIsActive(false);
+	const onPressSearchHere = async () => {
+		const camera = await ref.current.getCamera();
+		try {
+			const result = await axios.post(API + `/places/`, {
+				lat: camera.center.latitude,
+				long: camera.center.longitude,
+			});
+			setPlaces(result.data.places);
+			setBottomBarIsActive(false);
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
-	const onPressSearch = () => {
-		navigation.navigate("SearchLocation");
+	const onPressMap = () => {
+		setBottomBarIsActive(true);
 	};
 
 	const onPressLocation = () => {
@@ -125,21 +116,21 @@ export default function HomeScreen(props) {
 			}
 
 			let location = await Location.getCurrentPositionAsync({});
-			setCurrentLocation(location);
 			if (location) {
 				const newRegion = {
-					latitude: location.coords.latitude,
-					longitude: location.coords.longitude,
+					lat: location.coords.latitude,
+					lng: location.coords.longitude,
 					latitudeDelta: 0.1,
 					longitudeDelta: 0.06,
 				};
-				setRegion(newRegion);
+				console.log(newRegion);
+				props.updateLocation(newRegion);
 			}
 		})();
 	};
 
-	const onPressMap = () => {
-		setBottomBarIsActive(true);
+	const onPressSearch = () => {
+		navigation.navigate("SearchLocation");
 	};
 
 	return (
@@ -148,9 +139,9 @@ export default function HomeScreen(props) {
 				<MapView
 					provider={PROVIDER_GOOGLE}
 					style={styles.map}
-					region={region}
 					showsUserLocation={true}
 					onRegionChange={onRegionChange}
+					ref={ref}
 				></MapView>
 			</TouchableWithoutFeedback>
 			<MainHeader onPress={onPressSearch} />
@@ -196,3 +187,11 @@ const styles = StyleSheet.create({
 		paddingLeft: RFValue(20, 898),
 	},
 });
+
+function mapStateToProps(state) {
+	return {
+		location: state.location,
+	};
+}
+
+export default connect(mapStateToProps, actions)(HomeScreen);

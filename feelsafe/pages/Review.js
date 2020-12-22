@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import {
+    TouchableWithoutFeedback,
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    Keyboard,
+    Alert,
+} from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import ReviewInput from "../components/ReviewInput.js";
 import Rating from "../components/ReviewRating.js";
 import colors from "../helpers/Colors";
-import { ScrollView } from "react-native-gesture-handler";
 import MainButton from "../components/MainButton.js";
+import typeTranslator from "../helpers/typeTranslator.js";
+import axios from "axios";
+import API from "../helpers/API.js";
 
 const regex = {
-    review: /^[^±@^_§¡¢§¶•ªº«\\]{1,20}$/,
+    writtenReview: /^[^±@^_§¡¢§¶•ªº«\\]{1,20}$/,
 };
 
 function ReviewScreen(props) {
-    const placeState = {
-        name: "O Moelas",
-        type: "Café/Bar",
-    };
+    const { imageURL, place } = props.route.params;
 
     const [rateForm, setRateForm] = useState({
         ratingCond: 0,
@@ -53,7 +60,18 @@ function ReviewScreen(props) {
         props.navigation.goBack();
     };
 
-    const onPressPublish = () => {};
+    const onPressPublish = async () => {
+        try {
+            await axios.post(API + `/reviews/${place.place_id}`, {
+                ...rateForm,
+                description: formValues.writtenReview,
+            });
+            props.navigation.navigate("Home");
+        } catch (err) {
+            console.log(err);
+            Alert.alert("Error", "Please try again later.", [{ text: "Ok" }]);
+        }
+    };
 
     const checkDisabled = () => {
         var keys = Object.keys(errors);
@@ -79,92 +97,97 @@ function ReviewScreen(props) {
     }, [rateForm]);
 
     return (
-        <View style={styles.mainView}>
-            <View style={styles.header}>
-                <View style={styles.subcontainerRow}>
-                    <View>
-                        <Image
-                            style={styles.image}
-                            source={{
-                                uri:
-                                    "https://www.linguahouse.com/linguafiles/md5/d01dfa8621f83289155a3be0970fb0cb",
-                            }}
+        <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
+            <View style={styles.mainView}>
+                <View style={styles.header}>
+                    <View style={styles.subcontainerRow}>
+                        <View>
+                            <Image
+                                style={styles.image}
+                                source={{
+                                    uri: imageURL,
+                                }}
+                            />
+                        </View>
+                        <View style={styles.subcontainer}>
+                            <View>
+                                <Text style={styles.title}>{place.name}</Text>
+                            </View>
+                            <View>
+                                <Text style={styles.subtitle}>
+                                    {typeTranslator[place.types[0]]}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.container}>
+                    <View style={styles.subcontainerRow}>
+                        <Text style={styles.subtitleRow}>
+                            Condições sanitárias
+                        </Text>
+                        <Rating
+                            ratingState={rateForm.ratingCond}
+                            onPress={(num) =>
+                                setRateForm((prev) => ({
+                                    ...prev,
+                                    ratingCond: num,
+                                }))
+                            }
                         />
                     </View>
-                    <View style={styles.subcontainer}>
-                        <View>
-                            <Text style={styles.title}>{placeState.name}</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.subtitle}>
-                                {placeState.type}
-                            </Text>
-                        </View>
+                    <View style={styles.subcontainerRow}>
+                        <Text style={styles.subtitleRow}>
+                            Imposição das regras
+                        </Text>
+                        <Rating
+                            ratingState={rateForm.ratingRules}
+                            onPress={(num) =>
+                                setRateForm((prev) => ({
+                                    ...prev,
+                                    ratingRules: num,
+                                }))
+                            }
+                        />
+                    </View>
+                    <View style={styles.subcontainerRow}>
+                        <Text style={styles.subtitleRow}>Distância Social</Text>
+                        <Rating
+                            ratingState={rateForm.ratingSpace}
+                            onPress={(num) =>
+                                setRateForm((prev) => ({
+                                    ...prev,
+                                    ratingSpace: num,
+                                }))
+                            }
+                        />
                     </View>
                 </View>
-            </View>
-            <View style={styles.container}>
-                <View style={styles.subcontainerRow}>
-                    <Text style={styles.subtitleRow}>Condições sanitárias</Text>
-                    <Rating
-                        ratingState={rateForm.ratingCond}
-                        onPress={(num) =>
-                            setRateForm((prev) => ({
-                                ...prev,
-                                ratingCond: num,
-                            }))
-                        }
+                <View style={styles.form}>
+                    <ReviewInput
+                        fieldName="writtenReview"
+                        placeholder="Descreve a tua experiência (opcional)"
+                        onChangeText={handleChangeText}
+                        errors={errors}
+                        validateForm={validateForm}
                     />
                 </View>
                 <View style={styles.subcontainerRow}>
-                    <Text style={styles.subtitleRow}>Imposição das regras</Text>
-                    <Rating
-                        ratingState={rateForm.ratingRules}
-                        onPress={(num) =>
-                            setRateForm((prev) => ({
-                                ...prev,
-                                ratingRules: num,
-                            }))
-                        }
+                    <MainButton
+                        text="Voltar"
+                        onPress={onPressBack}
+                        buttonStyle={styles.button}
                     />
-                </View>
-                <View style={styles.subcontainerRow}>
-                    <Text style={styles.subtitleRow}>Distância Social</Text>
-                    <Rating
-                        ratingState={rateForm.ratingSpace}
-                        onPress={(num) =>
-                            setRateForm((prev) => ({
-                                ...prev,
-                                ratingSpace: num,
-                            }))
-                        }
+                    <MainButton
+                        backgroundGreen={true}
+                        text="Publicar"
+                        onPress={onPressPublish}
+                        buttonStyle={styles.button}
+                        disabled={buttonDisabled}
                     />
                 </View>
             </View>
-            <View style={styles.form}>
-                <ReviewInput
-                    fieldName="writtenReview"
-                    placeholder="Descreve a tua experiência (opcional)"
-                    onChangeText={handleChangeText}
-                    errors={errors}
-                    validateForm={validateForm}
-                />
-            </View>
-            <View style={styles.subcontainerRow}>
-                <MainButton
-                    text="Voltar"
-                    onPress={onPressBack}
-                    buttonStyle={styles.button}
-                />
-                <MainButton
-                    backgroundGreen={true}
-                    text="Publicar"
-                    onPress={onPressPublish}
-                    buttonStyle={styles.button}
-                    disabled={buttonDisabled}
-                />
-            </View>
-        </View>
+        </TouchableWithoutFeedback>
     );
 }
 
@@ -193,8 +216,7 @@ const styles = StyleSheet.create({
         marginLeft: RFValue(10, 898),
     },
     title: {
-        fontWeight: "900",
-        fontSize: RFValue(44, 898),
+        fontSize: RFValue(32, 898),
         lineHeight: 48,
         display: "flex",
         alignItems: "center",

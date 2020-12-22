@@ -12,6 +12,9 @@ import MainButton from "../components/MainButton.js";
 import Rating from "../components/Rating.js";
 import colors from "../helpers/Colors";
 import Stars from "../components/Stars.js";
+import typeTranslator from "../helpers/typeTranslator.js";
+import { connect } from "react-redux";
+import * as actions from "../actions";
 
 const RatingCard = () => {
     const ReviewState = {
@@ -101,14 +104,10 @@ const stylesReviewCard = StyleSheet.create({
 });
 
 function PlaceScreen(props) {
-    const placeState = {
-        name: "O Moelas",
-        type: "Café/Bar",
-        numTotalAvaliacoes: 5,
-    };
+    const { imageURL, place } = props.route.params;
 
     const onPressReview = () => {
-        props.navigation.navigate("Review");
+        props.navigation.navigate("Review", { place, imageURL });
     };
 
     return (
@@ -119,16 +118,17 @@ function PlaceScreen(props) {
                         <Image
                             style={styles.image}
                             source={{
-                                uri:
-                                    "https://www.linguahouse.com/linguafiles/md5/d01dfa8621f83289155a3be0970fb0cb",
+                                uri: imageURL,
                             }}
                         />
                     </View>
                     <View>
-                        <Text style={styles.title}>{placeState.name}</Text>
+                        <Text style={styles.title}>{place.name}</Text>
                     </View>
                     <View>
-                        <Text style={styles.subtitle}>{placeState.type}</Text>
+                        <Text style={styles.subtitle}>
+                            {typeTranslator[place.types[0]]}
+                        </Text>
                     </View>
                 </View>
                 <MainButton
@@ -136,34 +136,58 @@ function PlaceScreen(props) {
                     text="Avaliar"
                     onPress={onPressReview}
                     buttonStyle={styles.button}
+                    disabled={!props.isAuthenticated}
                 />
                 <View style={styles.container}>
                     <View style={styles.subcontainerRow}>
                         <Text style={styles.subtitleRow}>
                             Condições sanitárias
                         </Text>
-                        <Rating />
+                        <Stars
+                            styleMainView={{
+                                alignItems: "center",
+                            }}
+                            style={{ paddingHorizontal: RFValue(2, 898) }}
+                            size={RFValue(28, 898)}
+                            num={Math.round(place.ratingCond ?? 0)}
+                        />
                     </View>
                     <View style={styles.subcontainerRow}>
                         <Text style={styles.subtitleRow}>
                             Imposição das regras
                         </Text>
-                        <Rating />
+                        <Stars
+                            styleMainView={{
+                                alignItems: "center",
+                            }}
+                            style={{ paddingHorizontal: RFValue(2, 898) }}
+                            size={RFValue(28, 898)}
+                            num={Math.round(place.ratingRules ?? 0)}
+                        />
                     </View>
                     <View style={styles.subcontainerRow}>
                         <Text style={styles.subtitleRow}>Distância Social</Text>
-                        <Rating />
+                        <Stars
+                            styleMainView={{
+                                alignItems: "center",
+                            }}
+                            style={{ paddingHorizontal: RFValue(2, 898) }}
+                            size={RFValue(28, 898)}
+                            num={Math.round(place.ratingSpace ?? 0)}
+                        />
                     </View>
                     <Text style={styles.avaliacoesRow}>
-                        Avaliações [{placeState.numTotalAvaliacoes}]
+                        Avaliações [{place.nReviews ?? 0}]
                     </Text>
-                    <ScrollView horizontal={true}>
-                        <RatingCard />
-                        <RatingCard />
-                        <RatingCard />
-                        <RatingCard />
-                        <RatingCard />
-                    </ScrollView>
+                    {place.nReviews && (
+                        <ScrollView horizontal={true}>
+                            <RatingCard />
+                            <RatingCard />
+                            <RatingCard />
+                            <RatingCard />
+                            <RatingCard />
+                        </ScrollView>
+                    )}
                 </View>
             </View>
         </ScrollView>
@@ -191,6 +215,7 @@ const styles = StyleSheet.create({
         color: colors.darkGrey,
         fontFamily: "Raleway_700Bold",
         fontStyle: "normal",
+        paddingTop: RFValue(24, 898),
     },
     buttonRow: {
         width: "40%",
@@ -257,4 +282,9 @@ const styles = StyleSheet.create({
     star: {},
 });
 
-export default PlaceScreen;
+function mapStateToProps(state) {
+    return {
+        isAuthenticated: state.auth.isAuthenticated,
+    };
+}
+export default connect(mapStateToProps, actions)(PlaceScreen);

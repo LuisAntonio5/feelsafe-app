@@ -53,6 +53,7 @@ function SearchLocation(props) {
 					autoFocus={true}
 					fetchDetails={true}
 					onPress={(data, details = null) => {
+						console.log(details.geometry.location)
 						props.updateLocation(details.geometry.location);
 						props.navigation.navigate("Home");
 					}}

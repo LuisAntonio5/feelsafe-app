@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, TouchableOpacity, StyleSheet, View, Text } from "react-native";
+import axios from "axios";
 import { RFValue } from "react-native-responsive-fontsize";
 import Icon from "react-native-vector-icons/AntDesign";
 import StarsContainer from "../components/Stars.js";
@@ -8,13 +9,37 @@ import colors from "../helpers/Colors.js";
 
 export default function SliderCard(props) {
     const { navigation } = props;
-    const imageURL =
-        "https://upload.wikimedia.org/wikipedia/commons/6/62/Barbieri_-_ViaSophia25668.jpg";
-    const { nReviews, name, type, numStars } = props;
+    const [imageURL, setImageURL] = useState(null);
+    const { nReviews, name, type, numStars, photoReference } = props;
+    console.log(numStars);
 
     const onPress = () => {
-        navigation.navigate("Place", { place: props.place });
+        navigation.navigate("Place", {
+            place: props.place,
+            imageURL: imageURL,
+        });
     };
+
+    function timeout(delay) {
+        return new Promise((res) => setTimeout(res, delay));
+    }
+
+    useEffect(() => {
+        const getPhoto = async () => {
+            try {
+                await timeout(Math.floor(Math.random() * 1000));
+                const URL = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=AIzaSyAmTrEFmots6ROczWORr10PoFzQMGayKwY`;
+                const result = await axios.get(URL);
+                setImageURL(result.request.responseURL);
+                //setImageURL(result)
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        if (photoReference) {
+            getPhoto();
+        }
+    }, []);
 
     return (
         <TouchableOpacity onPress={onPress} style={styles.mainView}>
@@ -79,7 +104,6 @@ const styles = StyleSheet.create({
         fontSize: RFValue(24, 898),
         color: "black",
         marginBottom: RFValue(3, 898),
-        width: RFValue(100, 898),
         height: RFValue(26, 898),
     },
 

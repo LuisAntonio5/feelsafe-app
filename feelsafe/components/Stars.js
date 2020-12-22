@@ -13,6 +13,7 @@ const StarsContainer = (props) => {
         mainView: {
             flexDirection: "row",
             marginBottom: RFValue(5, 898),
+            ...props.styleMainView
         },
     });
     return (
